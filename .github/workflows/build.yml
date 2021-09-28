@@ -24,9 +24,9 @@ jobs:
         id: pip-cache
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-16.04-pip-${{ hashFiles('**/requirements.txt') }}
+          key: ${{ runner.os }}-18.04-pip-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
-            ${{ runner.os }}-16.04-pip-
+            ${{ runner.os }}-18.04-pip-
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -160,6 +160,11 @@ jobs:
           make dist
         env:
           BUILD: osx
+          MACOS_CERTIFICATE: ${{ secrets.INKSTITCH_APPLE_DEVELOPER_CERTIFICATE }}
+          MACOS_CERTIFICATE_PWD: ${{ secrets.INKSTITCH_APPLE_DEVELOPER_CERTIFICATE_PASSWORD }}
+          KEYCHAIN_PWD: ${{ secrets.KEYCHAIN_PASSWORD }}
+          APPLE_USER: ${{ secrets.INKSTITCH_NOTARIZE_AC }}
+          APPLE_PASS: ${{ secrets.INKSTITCH_NOTARIZE_PASS }}
       - uses: actions/upload-artifact@v2
         with:
           name: inkstitch-mac
