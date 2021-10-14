@@ -14,6 +14,7 @@ inx_path = os.path.join(_top_path, "inx")
 template_path = os.path.join(_top_path, "templates")
 version_path = _top_path
 
+
 def build_environment():
     env = Environment(
         loader=FileSystemLoader(template_path),
