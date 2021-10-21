@@ -19,7 +19,7 @@ def is_pattern(node):
 
 
 def apply_patterns(patches, node):
-    patterns = _get_patterns(node)
+    patterns = get_patterns(node,"#inkstitch-pattern-marker")
     _apply_stroke_patterns(patterns['stroke_patterns'], patches)
     _apply_fill_patterns(patterns['fill_patterns'], patches)
 
@@ -64,14 +64,15 @@ def _apply_fill_patterns(patterns, patches):
             patch.stitches = patch_points
 
 
-def _get_patterns(node):
+def get_patterns(node, marker_id):
     from .elements import EmbroideryElement
-    from .elements.fill import Fill
+    from .elements.auto_fill import auto_fill
+    #from .elements.fill import Fill
     from .elements.stroke import Stroke
 
     fills = []
     strokes = []
-    xpath = "./parent::svg:g/*[contains(@style, 'marker-start:url(#inkstitch-pattern-marker)')]"
+    xpath = "./parent::svg:g/*[contains(@style, 'marker-start:url("+marker_id+")')]"
     patterns = node.xpath(xpath, namespaces=inkex.NSS)
     for pattern in patterns:
         if pattern.tag not in EMBROIDERABLE_TAGS:
@@ -82,7 +83,7 @@ def _get_patterns(node):
         stroke = element.get_style('stroke')
 
         if fill is not None:
-            fill_pattern = Fill(pattern).shape
+            fill_pattern = auto_fill(pattern).shape
             fills.append(fill_pattern)
 
         if stroke is not None:
